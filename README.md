@@ -1,7 +1,7 @@
 ## Assignment3_1 Api Code
-*Api code for recipe website.
-*Using swaggerhub.
-*We guess it will take us 3.5 weeks to develop the project. Two weeks server side, and ten days and client side.
+  * Api code for recipe website.
+  * Using swaggerHub.
+  * We guess it will take us 3.5 weeks to develop the project. Two weeks server side, and ten days and client side.
 
 
 ## URL
