@@ -1,0 +1,441 @@
+openapi: 3.0.0
+info:
+  title: Recipes Site API
+  description: Recipes Site API
+  contact:
+    email: you@your-company.com
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/almogs575/Recipes/1.0.0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: user
+  description: All data about user
+- name: recipes
+  description: Anything you want to know about recipes
+- name: userRecipes
+  description: All the recipes reliative to the connecting user
+paths:
+  /register:
+    post:
+      tags:
+      - user
+      summary: Create new user
+      description: Create a new user
+      requestBody:
+        content:
+          appliction/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        "200":
+          description: successful
+        "400":
+          description: fail
+        "406":
+          description: exits username
+  /login:
+    get:
+      tags:
+      - user
+      summary: login
+      description: login to user
+      parameters:
+      - name: username
+        in: query
+        description: The user name for login
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: password
+        in: query
+        description: The password for login in clear text
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+        "400":
+          description: Invalid username/password supplied
+      security:
+      - cookieAuth: []
+  /user/{username}:
+    get:
+      tags:
+      - user
+      summary: Get user by user name
+      description: Get user info by user name
+      parameters:
+      - name: username
+        in: path
+        description: The user name that needs to be fetched
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: Invalid username supplied
+        "404":
+          description: User not found
+          content: {}
+      security:
+      - cookieAuth: []
+  /user/lastRecipes:
+    get:
+      tags:
+      - userRecipes
+      summary: last recipes
+      description: get 3 last watched recipes
+      responses:
+        "200":
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/shortRecipe'
+      security:
+      - cookieAuth: []
+  /user/favoriteRecipes:
+    get:
+      tags:
+      - userRecipes
+      summary: favorite recipes
+      description: show the favorite recipes of a user
+      responses:
+        "200":
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/fullRecipe'
+      security:
+      - cookieAuth: []
+  /user/myRecipes:
+    get:
+      tags:
+      - userRecipes
+      summary: user recipes
+      description: show the user personal recipes
+      responses:
+        "200":
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/fullRecipe'
+      security:
+      - cookieAuth: []
+  /user/familyRecipes:
+    get:
+      tags:
+      - userRecipes
+      summary: user family recipes
+      description: show the user's family recipes
+      responses:
+        "200":
+          description: successful
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/familyRecipe'
+      security:
+      - cookieAuth: []
+  /user/newRecipe:
+    post:
+      tags:
+      - recipes
+      summary: new recipe
+      description: add a new recipe to the data base
+      requestBody:
+        content:
+          appliction/json:
+            schema:
+              $ref: '#/components/schemas/fullRecipe'
+        required: true
+      responses:
+        "200":
+          description: successful
+        "400":
+          description: fail
+  /user/familyRecipe:
+    post:
+      tags:
+      - userRecipes
+      summary: family recipes
+      description: add family recipe to my recipe`s page
+      requestBody:
+        content:
+          appliction/json:
+            schema:
+              $ref: '#/components/schemas/familyRecipe'
+        required: true
+      responses:
+        "200":
+          description: successful
+        "400":
+          description: fail
+      security:
+      - cookieAuth: []
+  /randomRecipes:
+    get:
+      tags:
+      - recipes
+      summary: random recipes
+      description: get 3 random recipes
+      responses:
+        "200":
+          description: successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/shortRecipe'
+  /recipes:
+    get:
+      tags:
+      - recipes
+      summary: Get all recipes
+      responses:
+        "200":
+          description: A list of recipes.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/fullRecipe'
+  /recipe/search:
+    get:
+      tags:
+      - recipes
+      summary: Find recipe by name
+      description: Returns a single recipe
+      parameters:
+      - name: recipeName
+        in: query
+        description: Name of recipe to return
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: fish
+      - name: recipe reuslt
+        in: query
+        description: choose how much recipes return (5/10/15)
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+          default: 5
+          enum:
+          - 5
+          - 10
+          - 15
+      - name: cuisines
+        in: query
+        description: the cuisines that the searched recipes belong to
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: diets
+        in: query
+        description: the diets that the searched recipes belong to
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      - name: intolerances
+        in: query
+        description: the intolerances that the searched recipes belong to
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        "200":
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/shortRecipe'
+        "400":
+          description: Invalid Name supplied
+        "404":
+          description: recipe not found
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+          example: tom
+        firstname:
+          type: string
+          example: Tom
+        lastname:
+          type: string
+          example: duany
+        country:
+          type: string
+          example: israel
+        password:
+          type: string
+          example: tomdauny1!
+        email:
+          type: string
+          example: tomd@gmail.com
+        img:
+          type: string
+          example: www.url.jpeg
+    shortRecipe:
+      type: object
+      properties:
+        img:
+          type: string
+          example: www.url.jpeg
+        name:
+          type: string
+          example: apple cake
+        time:
+          type: integer
+          example: 10
+        likes:
+          type: integer
+          example: 100
+        vegetarian:
+          type: boolean
+          example: true
+        vegan:
+          type: boolean
+          example: true
+        glutenfree:
+          type: boolean
+          example: true
+        visited:
+          type: boolean
+          example: true
+        favorite:
+          type: boolean
+          example: true
+    fullRecipe:
+      type: object
+      properties:
+        recipeId:
+          type: integer
+          example: 100
+        img:
+          type: string
+          example: www.url.jpeg
+        name:
+          type: string
+          example: apple cake
+        time:
+          type: integer
+          example: 10
+        likes:
+          type: integer
+          example: 100
+        vegetarian:
+          type: boolean
+          example: true
+        vegan:
+          type: boolean
+          example: true
+        glutenfree:
+          type: boolean
+          example: true
+        favorite:
+          type: boolean
+          example: true
+        ingredients:
+          type: array
+          example:
+          - eggs: 3
+          - salt: 2
+          items:
+            $ref: '#/components/schemas/fullRecipe_ingredients'
+        instructions:
+          type: string
+          example: put take done
+        dishes:
+          type: integer
+          example: 4
+    familyRecipe:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1532
+        familymember:
+          type: string
+          example: mother
+        holidays:
+          type: array
+          example:
+          - pessah
+          - shavuot
+          items:
+            type: string
+        name:
+          type: string
+          example: Hamburger
+        img:
+          type: string
+          example: https://image.shutterstock.com/w-705104968.jpg
+        ingredients:
+          type: array
+          example:
+          - eggs: 3
+          - salt: 2
+          items:
+            $ref: '#/components/schemas/fullRecipe_ingredients'
+        instructions:
+          type: string
+          example: put take done
+    fullRecipe_ingredients:
+      type: object
+      properties:
+        ingredientName:
+          type: string
+        amount:
+          type: integer
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      description: 'Session key to identify user session. '
+      name: JSESSIONID
+      in: cookie
