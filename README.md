@@ -5,7 +5,7 @@
 
 
 ## URL
-[SwaggerHub](https://app.swaggerhub.com/apis-docs/almogs575/Recipes/1.0.0)
+[SwaggerHub](https://app.swaggerhub.com/apis-docs/almogs575/Recipes/2.0.0)
 
 ## Developers
   * Almog Sarafian - 305069577
